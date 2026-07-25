@@ -13,6 +13,8 @@ local.properties
 .settings/
 .loadpath
 .recommenders
+.idea
+.codegraph
 
 # External tool builders
 .externalToolBuilders/
