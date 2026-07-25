@@ -100,6 +100,7 @@ public final class AuthlibInjector {
 		log(INFO, "Version: " + AuthlibInjector.class.getPackage().getImplementationVersion());
 
 		APIMetadata apiMetadata = fetchAPIMetadata(apiUrl);
+		club.leisurec.mcyas.authlibinjector.MCYASAuthentication.init(apiMetadata);
 		classTransformer = createTransformer(apiMetadata);
 		instrumentation.addTransformer(classTransformer, retransformSupported);
 
