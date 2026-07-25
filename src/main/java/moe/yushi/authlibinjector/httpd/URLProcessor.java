@@ -37,6 +37,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import club.leisurec.mcyas.authlibinjector.MCYASHttpHeader;
 import moe.yushi.authlibinjector.Config;
 import moe.yushi.authlibinjector.internal.fi.iki.elonen.IHTTPSession;
 import moe.yushi.authlibinjector.internal.fi.iki.elonen.IStatus;
@@ -179,6 +181,8 @@ public class URLProcessor {
 
 		Map<String, String> requestHeaders = new LinkedHashMap<>(session.getHeaders());
 		ignoredHeaders.forEach(requestHeaders::remove);
+		requestHeaders.remove(MCYASHttpHeader.GAME_SERVER_VERIFY);
+		requestHeaders.remove(MCYASHttpHeader.GAME_SERVER_AUTHENTICATION);
 
 		InputStream clientIn = session.getInputStream();
 
@@ -188,6 +192,11 @@ public class URLProcessor {
 		conn.setRequestMethod(method);
 		conn.setDoOutput(clientIn != null);
 		requestHeaders.forEach(conn::setRequestProperty);
+
+		String sessionToken = Config.mcyasSessionToken;
+		if (sessionToken != null && !sessionToken.isEmpty() && upstream.contains("/session/minecraft/hasJoined")) {
+			conn.setRequestProperty(MCYASHttpHeader.GAME_SERVER_AUTHENTICATION, sessionToken);
+		}
 
 		if (clientIn != null && !method.equalsIgnoreCase("GET") && !method.equalsIgnoreCase("HEAD")) {
 			try (OutputStream upstreamOut = conn.getOutputStream()) {
