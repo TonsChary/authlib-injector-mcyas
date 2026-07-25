@@ -65,6 +65,10 @@ public final class Config {
 	public static boolean noShowServerName;
 	public static int httpdPort;
 
+	public static String mcyasVerifyKeyProp;
+	public static String mcyasVerifyKeyValue;
+	public static String mcyasSessionToken;
+
 	private static void initDebugOptions() {
 		String prop = System.getProperty("authlibinjector.debug");
 		if ("all".equals(prop)) {
@@ -184,5 +188,21 @@ public final class Config {
 		httpdDisabled = System.getProperty("authlibinjector.disableHttpd") != null;
 		noShowServerName = System.getProperty("authlibinjector.noShowServerName") != null;
 		httpdPort = Integer.getInteger("authlibinjector.httpdPort", 0);
+
+		mcyasVerifyKeyProp = "mcyas.verify.key";
+		mcyasVerifyKeyValue = System.getProperty(mcyasVerifyKeyProp);
+
+		if (mcyasVerifyKeyValue != null && !mcyasVerifyKeyValue.isEmpty()) {
+			log(INFO, "MCYAS server verify key loaded: " + maskSensitive(mcyasVerifyKeyValue));
+		} else {
+			log(INFO, "MCYAS server verify key (-Dmcyas.verify.key) is not configured, hasJoined requests will not carry authentication header");
+		}
+	}
+
+	private static String maskSensitive(String value) {
+		if (value.length() <= 4) {
+			return "****";
+		}
+		return value.substring(0, 2) + "****" + value.substring(value.length() - 2);
 	}
 }
