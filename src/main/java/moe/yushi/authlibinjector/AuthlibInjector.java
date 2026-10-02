@@ -32,6 +32,7 @@ import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.lang.instrument.Instrumentation;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -204,9 +205,17 @@ public final class AuthlibInjector {
 	}
 
 	private static void warnIfHttp(String url) {
-		if (url.toLowerCase().startsWith("http://")) {
-			log(WARNING, "You are using HTTP protocol, which is INSECURE! Please switch to HTTPS if possible.");
+		URI uri = URI.create(url);
+		if (!"http".equalsIgnoreCase(uri.getScheme())) {
+			return;
 		}
+
+		String host = uri.getHost();
+		if ("localhost".equalsIgnoreCase(host) || "127.0.0.1".equals(host) || "[::1]".equals(host)) {
+			return;
+		}
+
+		log(WARNING, "You are using HTTP protocol, which is INSECURE! Please switch to HTTPS if possible.");
 	}
 
 	private static String addHttpsIfMissing(String url) {
@@ -298,6 +307,9 @@ public final class AuthlibInjector {
 
 		transformer.units.add(new SkinWhitelistTransformUnit());
 		SkinWhitelistTransformUnit.getWhitelistedDomains().addAll(config.getSkinDomains());
+		if (SkinWhitelistTransformUnit.getWhitelistedDomains().stream().anyMatch(p -> p.matches("\\*+"))) {
+			log(INFO, "Texture domain whitelist is disabled (skinDomains wildcard)");
+		}
 
 		transformer.units.add(new YggdrasilKeyTransformUnit());
 		config.getDecodedPublickey().ifPresent(YggdrasilKeyTransformUnit.PUBLIC_KEYS::add);
