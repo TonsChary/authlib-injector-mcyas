@@ -15,6 +15,7 @@ local.properties
 .recommenders
 .idea
 .codegraph
+.scratch
 
 # External tool builders
 .externalToolBuilders/
