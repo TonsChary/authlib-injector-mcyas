@@ -28,6 +28,15 @@ gradle
 -javaagent:{authlib-injector.jar 的路径}={验证服务器 URL (API 地址)}
 ```
 
+## 好友功能
+Minecraft 26.3 (authlib 10) 引入了官方好友功能. authlib-injector 会将客户端对
+`api.minecraftservices.com` 好友相关接口的请求转发到验证服务器, 使其能够由第三方验证服务器提供.
+
+验证服务器需要通过实现 `/minecraftservices/` 下的若干接口来支持该功能, 详见
+[好友功能技术规范](https://yushijinhun.github.io/authlib-injector/zh/%E5%A5%BD%E5%8F%8B%E5%8A%9F%E8%83%BD%E6%8A%80%E6%9C%AF%E8%A7%84%E8%8C%83.html).
+
+该功能仅在较新版本中存在, 旧版本客户端不会请求这些接口, 因此实现它们不影响旧版本兼容性.
+
 ## 参数
 ```
 -Dauthlibinjector.noLogFile
@@ -114,6 +123,12 @@ gradle
     是否启用玩家用户名检查, 若禁用, 则 authlib-injector 将关闭 Minecraft、BungeeCord 和 Paper 的用户名检查功能.
     若验证服务器未设置 feature.usernameCheck 选项, 则默认禁用.
     注意, 开启此功能将导致用户名包含非英文字符的玩家无法进入服务器.
+
+-Dmcyas.friends.debug
+    启用好友功能的本地调试桩, 默认为关闭.
+    开启后, 对 /friends 与 /presence 的请求将由内建 HTTP 服务器以内存中的假数据应答,
+    不会转发到验证服务器. 该选项用于观察客户端实际发出的请求内容, 便于验证服务器端实现.
+    需要配合 -Dauthlibinjector.debug 使用才能看到请求日志.
 ```
 
 ## 捐助

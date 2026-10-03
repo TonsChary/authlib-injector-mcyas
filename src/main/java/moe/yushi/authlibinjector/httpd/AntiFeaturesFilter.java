@@ -30,7 +30,6 @@ import moe.yushi.authlibinjector.internal.fi.iki.elonen.Status;
 public class AntiFeaturesFilter implements URLFilter {
 
 	private static final String RESPONSE_PRIVILEGES = "{\"privileges\":{\"onlineChat\":{\"enabled\":true},\"multiplayerServer\":{\"enabled\":true},\"multiplayerRealms\":{\"enabled\":true},\"telemetry\":{\"enabled\":false}}}";
-	private static final String RESPONSE_PLAYER_ATTRIBUTES = "{\"privileges\":{\"multiplayerRealms\":{\"enabled\":true},\"multiplayerServer\":{\"enabled\":true},\"onlineChat\":{\"enabled\":true},\"telemetry\":{\"enabled\":false}},\"profanityFilterPreferences\":{\"profanityFilterOn\":false}}";
 	private static final String RESPONSE_PRIVACY_BLOCKLIST = "{\"blockedProfiles\":[]}";
 
 	@Override
@@ -42,8 +41,6 @@ public class AntiFeaturesFilter implements URLFilter {
 	public Optional<Response> handle(URLProcessor urlProcessor, String domain, String path, IHTTPSession session) throws IOException {
 		if (domain.equals("api.minecraftservices.com") && path.equals("/privileges") && session.getMethod().equals("GET")) {
 			return Optional.of(Response.newFixedLength(Status.OK, CONTENT_TYPE_JSON, RESPONSE_PRIVILEGES));
-		} else if (domain.equals("api.minecraftservices.com") && path.equals("/player/attributes") && session.getMethod().equals("GET")) {
-			return Optional.of(Response.newFixedLength(Status.OK, CONTENT_TYPE_JSON, RESPONSE_PLAYER_ATTRIBUTES));
 		} else if (domain.equals("api.minecraftservices.com") && path.equals("/privacy/blocklist") && session.getMethod().equals("GET")) {
 			return Optional.of(Response.newFixedLength(Status.OK, CONTENT_TYPE_JSON, RESPONSE_PRIVACY_BLOCKLIST));
 		} else if (domain.equals("sessionserver.mojang.com") && path.equals("/blockedservers") && session.getMethod().equals("GET")) {

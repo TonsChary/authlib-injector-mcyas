@@ -28,6 +28,18 @@ Configure Minecraft server with the following JVM parameter:
 -javaagent:{/path/to/authlib-injector.jar}={Authentication Server URL}
 ```
 
+## Friends feature
+Minecraft 26.3 (authlib 10) introduces the official friends feature. authlib-injector forwards the
+client's requests to the friends endpoints of `api.minecraftservices.com` to the authentication
+server, so that they can be served by a third-party authentication server.
+
+To support this feature, the authentication server needs to implement several endpoints under
+`/minecraftservices/`. See the
+[friends feature technical specification](https://yushijinhun.github.io/authlib-injector/zh/%E5%A5%BD%E5%8F%8B%E5%8A%9F%E8%83%BD%E6%8A%80%E6%9C%AF%E8%A7%84%E8%8C%83.html).
+
+This feature exists only in newer versions. Older clients never request these endpoints, so
+implementing them does not affect backwards compatibility.
+
 ## Options
 ```
 -Dauthlibinjector.mojangNamespace={default|enabled|disabled}
@@ -107,6 +119,13 @@ Configure Minecraft server with the following JVM parameter:
     Whether to enable username validation. If disabled, Minecraft, BungeeCord and Paper will NOT perform username validation.
     It's disabled by default if the authentication server does NOT send feature.usernameCheck option.
     Turning on this option will prevent players whose username contains special characters from joining the server.
+
+-Dmcyas.friends.debug
+    Whether to enable the local debug stub for the friends feature. Disabled by default.
+    When enabled, requests to /friends and /presence are answered by the built-in HTTP server
+    with in-memory fixtures, and are NOT forwarded to the authentication server.
+    This option is intended for observing what the client actually sends, in order to validate
+    the authentication server's implementation. Use -Dauthlibinjector.debug to see request logs.
 ```
 
 ## License

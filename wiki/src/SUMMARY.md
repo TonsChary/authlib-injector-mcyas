@@ -4,6 +4,7 @@
 
 - [Home](./zh/Home.md)
 - [Yggdrasil 服务端技术规范](./zh/Yggdrasil-服务端技术规范.md)
+- [好友功能技术规范](./zh/好友功能技术规范.md)
 - [启动器技术规范](./zh/启动器技术规范.md)
 - [在 Minecraft 服务端使用 authlib-injector](./zh/在-Minecraft-服务端使用-authlib-injector.md)
 - [签名密钥对](./zh/签名密钥对.md)

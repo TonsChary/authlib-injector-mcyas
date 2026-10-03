@@ -63,6 +63,7 @@ public final class Config {
 	public static FeatureOption profileKey;
 	public static FeatureOption usernameCheck;
 	public static boolean noShowServerName;
+	public static boolean friendsDebug;
 	public static int httpdPort;
 
 	public static String mcyasVerifyKeyProp;
@@ -187,6 +188,7 @@ public final class Config {
 		usernameCheck = parseFeatureOption("authlibinjector.usernameCheck");
 		httpdDisabled = System.getProperty("authlibinjector.disableHttpd") != null;
 		noShowServerName = System.getProperty("authlibinjector.noShowServerName") != null;
+		friendsDebug = System.getProperty("mcyas.friends.debug") != null;
 		httpdPort = Integer.getInteger("authlibinjector.httpdPort", 0);
 
 		mcyasVerifyKeyProp = "mcyas.verify.key";
